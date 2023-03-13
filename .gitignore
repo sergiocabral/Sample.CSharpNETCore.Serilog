@@ -1,0 +1,10 @@
+# Compilados do C#
+bin
+obj
+
+# IDE de desenvolvimento
+.vscode
+.idea
+
+# Arquivos de log
+*.log
