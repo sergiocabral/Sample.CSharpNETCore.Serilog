@@ -5,7 +5,9 @@ Console.WriteLine("Hello, World!");
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
-    .WriteTo.Console()
+    .WriteTo.Console(
+        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+    )
     .WriteTo.File("events.log")
     .WriteTo.File(
         path: "errors.log",
