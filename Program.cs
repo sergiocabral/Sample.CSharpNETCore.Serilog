@@ -4,6 +4,6 @@ Console.WriteLine("Hello, World!");
 
 var loggerConfiguration = new LoggerConfiguration();
 loggerConfiguration.WriteTo.Console();
-var logger = loggerConfiguration.CreateLogger();
+Log.Logger = loggerConfiguration.CreateLogger();
 
-logger.Information("Hello, Logger!");
+Log.Information("Hello, Logger!");
