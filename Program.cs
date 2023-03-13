@@ -2,10 +2,11 @@
 
 Console.WriteLine("Hello, World!");
 
-var loggerConfiguration = new LoggerConfiguration();
-loggerConfiguration.MinimumLevel.Verbose();
-loggerConfiguration.WriteTo.Console();
-Log.Logger = loggerConfiguration.CreateLogger();
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose()
+    .WriteTo.Console()
+    .WriteTo.File("events.log")
+    .CreateLogger();
 
 Log.Verbose("Informações muito detalhadas.");
 Log.Debug("Informações de depuração.");
