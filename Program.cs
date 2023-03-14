@@ -25,6 +25,7 @@ Log.Logger = new LoggerConfiguration()
         restrictedToMinimumLevel: LogEventLevel.Warning,
         formatter: new CompactJsonFormatter()
     )
+    .Enrich.WithProperty("prop-always", "estou sempre aqui")
     .CreateLogger();
 
 Log.Verbose("Informações muito detalhadas.");
@@ -41,7 +42,10 @@ while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Escape) {
     Log.Verbose("Objeto: {@object}", obj);
     Log.Debug("Aleatório: {number}", obj.random);
     if (random.Next() % 100 <= 30) {
-        Log.Error("Ocorreu um erro: {error}", new Exception("My Bad"));
+        var contextLog = Log
+            .ForContext<Exception>()
+            .ForContext("prop-erro", "quando dá erro");
+        contextLog.Error("Ocorreu um erro: {error}", new Exception("My Bad"));
     }
     Thread.Sleep(1000);
 }
