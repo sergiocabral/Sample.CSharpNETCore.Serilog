@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using Serilog.Events;
 using Serilog.Templates;
+using Serilog.Formatting.Compact;
 
 Console.WriteLine("Hello, World!");
 
@@ -16,11 +17,13 @@ Log.Logger = new LoggerConfiguration()
         rollingInterval: RollingInterval.Minute,
         retainedFileCountLimit: 5,
         fileSizeLimitBytes: 1024,
-        rollOnFileSizeLimit: true
+        rollOnFileSizeLimit: true,
+        formatter: new CompactJsonFormatter()
     )
     .WriteTo.File(
         path: "errors.log",
-        restrictedToMinimumLevel: LogEventLevel.Warning
+        restrictedToMinimumLevel: LogEventLevel.Warning,
+        formatter: new CompactJsonFormatter()
     )
     .CreateLogger();
 
