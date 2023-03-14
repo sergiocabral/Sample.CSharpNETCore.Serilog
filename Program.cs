@@ -2,6 +2,7 @@
 using Serilog.Events;
 using Serilog.Templates;
 using Serilog.Formatting.Compact;
+using Serilog.Context;
 
 Console.WriteLine("Hello, World!");
 
@@ -29,6 +30,7 @@ Log.Logger = new LoggerConfiguration()
     .Enrich.WithEnvironmentName()
     .Enrich.WithEnvironmentUserName()
     .Enrich.WithMachineName()
+    .Enrich.FromLogContext()
     .CreateLogger();
 
 Log.Verbose("Informações muito detalhadas.");
@@ -38,17 +40,20 @@ Log.Warning("Não são erros, mas podem podem levar a problemas no futuro.");
 Log.Error("Erros que impedem o funcionamento correto.");
 Log.Fatal("Erros graves que fazem o aplicativo parar de funcionar.");
 
-var random = new Random();
-var count = 0;
-while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Escape) {
-    var obj = new { count = ++count, random = random.Next() % 20 };
-    Log.Verbose("Objeto: {@object}", obj);
-    Log.Debug("Aleatório: {number}", obj.random);
-    if (random.Next() % 100 <= 30) {
-        var contextLog = Log
-            .ForContext<Exception>()
-            .ForContext("prop-erro", "quando dá erro");
-        contextLog.Error("Ocorreu um erro: {error}", new Exception("My Bad"));
+using (LogContext.PushProperty("prop-context1", "valor global1"))
+using (LogContext.PushProperty("prop-context2", "valor global2")) {
+    var random = new Random();
+    var count = 0;
+    while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Escape) {
+        var obj = new { count = ++count, random = random.Next() % 20 };
+        Log.Verbose("Objeto: {@object}", obj);
+        Log.Debug("Aleatório: {number}", obj.random);
+        if (random.Next() % 100 <= 30) {
+            var contextLog = Log
+                .ForContext<Exception>()
+                .ForContext("prop-erro", "quando dá erro");
+            contextLog.Error("Ocorreu um erro: {error}", new Exception("My Bad"));
+        }
+        Thread.Sleep(1000);
     }
-    Thread.Sleep(1000);
 }
