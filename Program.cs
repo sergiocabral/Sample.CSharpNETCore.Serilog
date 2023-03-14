@@ -8,6 +8,7 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(
         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj}{NewLine}{Exception}"
     )
+    .Filter.ByExcluding("object.random < 10 OR number >= 10")
     .WriteTo.File(
         path: "events-.log",
         rollingInterval: RollingInterval.Minute,
@@ -31,7 +32,7 @@ Log.Fatal("Erros graves que fazem o aplicativo parar de funcionar.");
 var random = new Random();
 var count = 0;
 while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Escape) {
-    var obj = new { count = ++count, random = random.Next() };
+    var obj = new { count = ++count, random = random.Next() % 20 };
     Log.Verbose("Objeto: {@object}", obj);
     Log.Debug("Aleatório: {number}", obj.random);
     Thread.Sleep(100);
