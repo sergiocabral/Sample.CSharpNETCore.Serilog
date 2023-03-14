@@ -26,6 +26,9 @@ Log.Logger = new LoggerConfiguration()
         formatter: new CompactJsonFormatter()
     )
     .Enrich.WithProperty("prop-always", "estou sempre aqui")
+    .Enrich.WithEnvironmentName()
+    .Enrich.WithEnvironmentUserName()
+    .Enrich.WithMachineName()
     .CreateLogger();
 
 Log.Verbose("Informações muito detalhadas.");
