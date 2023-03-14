@@ -1,12 +1,14 @@
 ﻿using Serilog;
 using Serilog.Events;
+using Serilog.Templates;
 
 Console.WriteLine("Hello, World!");
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Verbose()
     .WriteTo.Console(
-        outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+        // outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj}{NewLine}{Exception}"
+        formatter: new ExpressionTemplate("{ { time: @t, level: if @l = 'Verbose' then undefined() else if @l = 'Error' then @l else 'Log', messageTemplate: @mt, message: @m, ..@p, @x } }\n\n")
     )
     .Filter.ByExcluding("object.random < 10 OR number >= 10")
     .WriteTo.File(
@@ -35,5 +37,8 @@ while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Escape) {
     var obj = new { count = ++count, random = random.Next() % 20 };
     Log.Verbose("Objeto: {@object}", obj);
     Log.Debug("Aleatório: {number}", obj.random);
-    Thread.Sleep(100);
+    if (random.Next() % 100 <= 30) {
+        Log.Error("Ocorreu um erro: {error}", new Exception("My Bad"));
+    }
+    Thread.Sleep(1000);
 }
