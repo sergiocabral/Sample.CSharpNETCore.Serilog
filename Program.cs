@@ -29,7 +29,10 @@ Log.Error("Erros que impedem o funcionamento correto.");
 Log.Fatal("Erros graves que fazem o aplicativo parar de funcionar.");
 
 var random = new Random();
+var count = 0;
 while (!Console.KeyAvailable || Console.ReadKey().Key != ConsoleKey.Escape) {
-    Log.Verbose(random.Next().ToString());
+    var obj = new { count = ++count, random = random.Next() };
+    Log.Verbose("Objeto: {@object}", obj);
+    Log.Debug("Aleatório: {number}", obj.random);
     Thread.Sleep(100);
 }
