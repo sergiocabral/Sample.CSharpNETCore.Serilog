@@ -9,7 +9,9 @@ Log.Logger = new LoggerConfiguration()
         outputTemplate: "[{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Level:u3}] {Message:lj}{NewLine}{Exception}"
     )
     .WriteTo.File(
-        path: "events.log",
+        path: "events-.log",
+        rollingInterval: RollingInterval.Minute,
+        retainedFileCountLimit: 5,
         fileSizeLimitBytes: 1024,
         rollOnFileSizeLimit: true
     )
